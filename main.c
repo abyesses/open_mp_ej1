@@ -6,7 +6,7 @@
 //  Copyright © 2016 Abraham Esses. All rights reserved.
 //
 
-#include	<stdlib.h>
+#include    <stdlib.h>
 #include    <stdio.h>
 #include    <omp.h>
 #include    <math.h>
@@ -16,16 +16,22 @@
 int matrizLoca[1000][1000];
 void generaMatrizLoca();
 void generaMatrizLoca(){
-#pragma omp parallel for
-    for (int i = 0; i < N; ++i) {
+int tid;
+#pragma omp parallel
+{
+	tid = omp_get_num_threads();
+	printf("num_threads: %d\n",tid);
+	#pragma omp parallel for
+    		for (int i = 0; i < N; ++i) {
         #pragma omp parallel for
-        for(int j = 0; j < N; ++j)
-        {
-            printf("i = %d, j= %d\n",i,j);
-            matrizLoca[i][j] = rand()%100;
-        }
-    }
-
+        		for(int j = 0; j < N; ++j)
+        		{
+//           		 printf("i = %d, j= %d\n",i,j);
+			printf("Soy el thread: %d\n",omp_get_thread_num());
+           		 matrizLoca[i][j] = rand()%100;
+		 	}    			
+	}
+}
 }
 int main(int argc,char *argv[]){
     
